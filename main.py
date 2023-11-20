@@ -31,8 +31,6 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     
     await query.answer()
 
-    await query.edit_message_text(text=f"Selected option: {query.data}")
-    
     if action[0:8] == "ban_user":
         username = action_data[1]
         user_host = action_data[2]

@@ -31,11 +31,15 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     
     await query.answer()
 
-    if action[0:8] == "ban_user":
-        username = action_data[1]
-        user_host = action_data[2]
+    username = action_data[1]
+    user_host = action_data[2]
+    
+    if action[0:9] == "kick_user":
         subprocess.run(["./scripts/kick_user.sh", username])
         await update.effective_message.reply_text("User has been successfully kicked")
+        
+    elif action[0:8] == "ban_user":
+        pass
 
 
 def main() -> None:

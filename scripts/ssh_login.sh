@@ -1,8 +1,6 @@
 #!/bin/bash
 # Telegram notification
-# Send msg when your server load to high
-token="6916547330:AAHp7E-WLbevvkQYNyt8Pu_ABmXyfvau-sY" # put your token here
-chat_id="1973399220" # your chat_id for sending notification
+
 sendmsg="https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown"
 sendfile="https://api.telegram.org/bot$token/sendDocument?parse_mode=markdown"
 date="$(date "+%d-%b-%Y-%H:%M")"

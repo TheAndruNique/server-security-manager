@@ -4,9 +4,24 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: $0 <telegram_bot_token> <chat_id>"
+    exit 1
+fi
+
+token=$1
+chat_id=$2
+
+new_lines="token=\"$1\"\nchat_id=\"$2\""
+
+sed -i "4i$new_lines" ./scripts/ssh_login.sh
+
+echo "TELEGRAM_BOT_TOKEN=$token" > .env
+
 sudo apt-get update
-sudo apt-get install python3
+sudo apt-get install python3.10
 sudo apt-get install jq
+sudo apt-get install python3.10-venv
 
 cp ./scripts/ssh_login.sh /usr/local/bin/ssh_login.sh
 chmod +x /usr/local/bin/ssh_login.sh ./scripts/ssh_login.sh ./scripts/ban_user.sh ./scripts/kick_user.sh

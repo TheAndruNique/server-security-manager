@@ -4,14 +4,16 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
-sudo apt install jq
+sudo apt-get update
+sudo apt-get install python3
+sudo apt-get install jq
 
 cp ./scripts/ssh_login.sh /usr/local/bin/ssh_login.sh
 chmod +x /usr/local/bin/ssh_login.sh ./scripts/ssh_login.sh ./scripts/ban_user.sh ./scripts/kick_user.sh
 
 echo "session optional pam_exec.so type=open_session seteuid /usr/local/bin/ssh_login.sh" >> /etc/pam.d/common-session
 
-python -m venv venv
+python3 -m venv venv
 ./venv/bin/pip install -r requirements.txt
 
 current_python=$(pwd)/venv/bin/python

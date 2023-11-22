@@ -24,7 +24,7 @@ sudo apt-get install jq
 sudo apt-get install python3.10-venv
 
 cp ./scripts/ssh_login.sh /usr/local/bin/ssh_login.sh
-chmod +x /usr/local/bin/ssh_login.sh ./scripts/ssh_login.sh ./scripts/ban_user.sh ./scripts/kick_user.sh
+chmod +x /usr/local/bin/ssh_login.sh ./scripts/ssh_login.sh ./scripts/ban_user.sh ./scripts/kick_user.sh ./scripts/unban_user.sh
 
 echo "session optional pam_exec.so type=open_session seteuid /usr/local/bin/ssh_login.sh" >> /etc/pam.d/common-session
 

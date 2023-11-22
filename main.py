@@ -40,7 +40,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         
     elif action[0:8] == "ban_user":
         result = subprocess.run(["./scripts/ban_user.sh", username, user_host], capture_output=True)
-        await update.effective_message.reply_text(f"{result.stdout.decode()}\n{result.stderr.decode()}")
+        await update.effective_message.reply_text(f"User with IP {user_host} has been successfully banned.")
 
 async def unban_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_ip = context.args[0] if context.args else None

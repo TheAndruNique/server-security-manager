@@ -39,8 +39,8 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await update.effective_message.reply_text("User has been successfully kicked")
         
     elif action[0:8] == "ban_user":
-        pass
-
+        result = subprocess.run(["./scripts/ban_user.sh", username, user_host], capture_output=True)
+        await update.effective_message.reply_text(f"{result.stdout}\n{result.stderr}")
 
 def main() -> None:
     """Run the bot."""

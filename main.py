@@ -1,6 +1,6 @@
 import logging
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import Update
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
 from dotenv import load_dotenv
@@ -28,25 +28,46 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     action_data = query.data.split()
     action = action_data[0]
-    
+
     await query.answer()
 
     username = action_data[1]
     user_host = action_data[2]
-    
+
     if action[0:9] == "kick_user":
-        subprocess.run(["./scripts/kick_user.sh", username])
-        await update.effective_message.reply_text("User has been successfully kicked")
-        
+        result = subprocess.run(
+            ["./scripts/kick_user.sh", username], capture_output=True
+        )
+        if result.returncode == 0:
+            await update.effective_message.reply_text(
+                "User has been successfully kicked."
+            )
+        else:
+            await update.effective_message.reply_text(
+                f"Failed to kick user. Error:{result.stderr.decode()}"
+            )
+
     elif action[0:8] == "ban_user":
-        result = subprocess.run(["./scripts/ban_user.sh", username, user_host], capture_output=True)
-        await update.effective_message.reply_text(f"User with IP {user_host} has been successfully banned.")
+        result = subprocess.run(
+            ["./scripts/ban_user.sh", username, user_host], capture_output=True
+        )
+        if result.returncode == 0:
+            await update.effective_message.reply_text(
+                f"User with IP {user_host} has been successfully banned."
+            )
+        else:
+            await update.effective_message.reply_text(
+                f"Failed to ban user with IP {user_host}. Error output:\n{result.stderr.decode()}"
+            )
+
 
 async def unban_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_ip = context.args[0] if context.args else None
 
     if user_ip:
-        process = subprocess.run(["sudo", "./scripts/unban_user.sh", user_ip], capture_output=True)
+        process = subprocess.run(
+            ["sudo", "./scripts/unban_user.sh", user_ip], capture_output=True
+        )
 
         if process.returncode == 0:
             response_message = f"User with IP {user_ip} has been successfully unbanned."
@@ -56,6 +77,7 @@ async def unban_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         response_message = "Please provide the IP address of the user to unban."
 
     await update.message.reply_text(response_message)
+
 
 def main() -> None:
     """Run the bot."""

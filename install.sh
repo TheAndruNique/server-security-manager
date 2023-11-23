@@ -5,8 +5,8 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Usage: $0 <telegram_bot_token> <chat_id>"
-    exit 1
+  echo "Usage: $0 <telegram_bot_token> <chat_id>"
+  exit 1
 fi
 
 token=$1
@@ -19,14 +19,16 @@ sed -i "4i$new_lines" ./scripts/ssh_login.sh
 echo "TELEGRAM_BOT_TOKEN=$token" > .env
 
 sudo apt-get update
-sudo apt-get install python3.10
-sudo apt-get install jq
-sudo apt-get install python3.10-venv
+sudo apt-get install -y python3.10
+sudo apt-get install -y jq
+sudo apt-get install -y python3.10-venv
 
 cp ./scripts/ssh_login.sh /usr/local/bin/ssh_login.sh
 chmod +x /usr/local/bin/ssh_login.sh ./scripts/ssh_login.sh ./scripts/ban_user.sh ./scripts/kick_user.sh ./scripts/unban_user.sh
 
-echo "session optional pam_exec.so type=open_session seteuid /usr/local/bin/ssh_login.sh" >> /etc/pam.d/common-session
+if ! grep -q "session optional pam_exec.so type=open_session seteuid /usr/local/bin/ssh_login.sh" /etc/pam.d/common-session; then
+  echo "session optional pam_exec.so type=open_session seteuid /usr/local/bin/ssh_login.sh" >> /etc/pam.d/common-session
+fi
 
 python3 -m venv venv
 ./venv/bin/pip install -r requirements.txt
@@ -52,5 +54,7 @@ systemctl daemon-reload
 
 systemctl enable server-security-manager
 systemctl start server-security-manager
+
+sudo ufw enable
 
 echo "Service created and started."
